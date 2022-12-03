@@ -1,6 +1,6 @@
 # TODOlist
 
-_This is api that helps users to handle their tasks and meetings_
+_This is app that helps users to manage their tasks and planned meetings_
 
 ## Technologies:
  - python 3.10
