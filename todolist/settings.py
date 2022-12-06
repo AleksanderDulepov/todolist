@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '../.env')
@@ -81,8 +82,8 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get("DB_ENGINE"),
-        "HOST": os.environ.get("DB_HOST"),
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "HOST": 'postgres',
         "NAME": os.environ.get("POSTGRES_DB"),
         "PORT": os.environ.get("DB_PORT"),
         "USER": os.environ.get("POSTGRES_USER"),
