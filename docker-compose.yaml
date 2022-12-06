@@ -1,6 +1,12 @@
 version: '3.8'
 
 services:
+  front:
+    build: ./todo-list-frontend
+    ports:
+      - 80:80
+    depends_on:
+      - api
   api:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
