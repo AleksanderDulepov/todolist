@@ -11,7 +11,7 @@ services:
     image: aleksanderdulepov/django_todolist_repo:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./.env.dev:/code/.env
+      - ./.env_dev:/code/.env
     ports:
         - 8000:8000
     depends_on:
@@ -21,7 +21,7 @@ services:
     image: aleksanderdulepov/django_todolist_repo:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     command: python manage.py migrate
     volumes:
-      - ./.env.dev:/code/.env
+      - ./.env_dev:/code/.env
     depends_on:
       - postgres
   postgres:
