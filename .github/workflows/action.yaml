@@ -45,5 +45,5 @@ jobs:
           password: ${{ secrets.VM_PASSWORD }}
           script: |
             cd django-app
-            echo ${{ secrets.VM_PASSWORD }} | sudo -S docker-compose up -d
+            echo ${{ secrets.VM_PASSWORD }} | sudo -S docker compose up -d
 
