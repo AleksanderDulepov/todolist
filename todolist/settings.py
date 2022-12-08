@@ -83,14 +83,14 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "HOST": os.environ.get("DB_HOST", 'localhost'),
+        "HOST": 'postgres',
+        # "HOST": 'localhost',
         "NAME": os.environ.get("POSTGRES_DB"),
         "PORT": os.environ.get("DB_PORT"),
         "USER": os.environ.get("POSTGRES_USER"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
     },
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
