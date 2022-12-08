@@ -21,9 +21,9 @@ jobs:
       - name: install python
         uses: actions/setup-python@v2
       - name: install requirements
-        uses: pip install -r requirements.txt
+        run: pip install -r requirements.txt
       - name: run pytest
-        uses: pytest .
+        run: pytest .
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push
