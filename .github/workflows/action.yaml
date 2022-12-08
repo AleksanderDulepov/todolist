@@ -13,6 +13,17 @@ jobs:
         run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - name: docker push
         run: docker push aleksanderdulepov/django_todolist_repo:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone code
+        uses: actions/checkout@v2
+      - name: install python
+        uses: actions/setup-python@v2
+      - name: install requirements
+        uses: pip install -r requirements.txt
+      - name: run pytest
+        uses: pytest .
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push
