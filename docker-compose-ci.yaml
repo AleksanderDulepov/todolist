@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   front:
-    image: aleksanderdulepov/django_todolist_repo:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    image: sermalenk/skypro-front:lesson-34
     ports:
       - 80:80
     depends_on:
