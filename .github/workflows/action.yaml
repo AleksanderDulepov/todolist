@@ -13,27 +13,27 @@ jobs:
         run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - name: docker push
         run: docker push aleksanderdulepov/django_todolist_repo:$GITHUB_REF_NAME-$GITHUB_RUN_ID
-#  testing:
-#    needs: build_and_push
-#    runs-on: ubuntu-latest
-#    env:
-#      DB_USER: ${{ secrets.DB_USER }}
-#      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-#      DB_NAME: ${{ secrets.DB_NAME }}
-#    steps:
-#      - name: clone code
-#        uses: actions/checkout@v2
-#      - name: install python
-#        uses: actions/setup-python@v2
-#      - name: install requirements
-#        run: pip install -r requirements.txt
-#      - name: render configs for testing
-#        run: |
-#          cat .env-ci | envsubst > .env
-#      - name: run pytest
-#        run: pytest .
-  deploy:
+  testing:
     needs: build_and_push
+    runs-on: ubuntu-latest
+    env:
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+    steps:
+      - name: clone code
+        uses: actions/checkout@v2
+      - name: install python
+        uses: actions/setup-python@v2
+      - name: install requirements
+        run: pip install -r requirements.txt
+      - name: render configs for testing
+        run: |
+          cat .env-ci | envsubst > .env
+      - name: run pytest
+        run: pytest .
+  deploy:
+    needs: testing
     runs-on: ubuntu-latest
     env:
       DB_USER: ${{ secrets.DB_USER }}
