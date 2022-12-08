@@ -3,6 +3,7 @@ version: '3.8'
 services:
   front:
     image: sermalenk/skypro-front:lesson-34
+    restart: always
     ports:
       - 80:80
     depends_on:
@@ -12,6 +13,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./.env:/code/.env
+    restart: always
     ports:
         - 8000:8000
     depends_on:

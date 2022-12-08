@@ -3,6 +3,7 @@ version: '3.8'
 services:
   front:
     image: sermalenk/skypro-front:lesson-34
+    restart: always
     ports:
       - 80:80
     depends_on:
@@ -10,6 +11,7 @@ services:
   api:
     image: aleksanderdulepov/django_todolist_repo:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     command: python manage.py runserver 0.0.0.0:8000
+    restart: always
     volumes:
       - ./.env:/code/.env
     ports:
