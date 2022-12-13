@@ -12,7 +12,7 @@ services:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     env_file:
-      ./.env
+      - ./.env
     restart: always
     ports:
         - 8000:8000
@@ -27,7 +27,7 @@ services:
     build: .
     command: python manage.py migrate
     env_file:
-      ./.env
+      - ./.env
     depends_on:
       postgres:
         condition:

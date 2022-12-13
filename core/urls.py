@@ -1,8 +1,7 @@
-from django.db import router
 from django.urls import path
-from rest_framework.routers import SimpleRouter
 
-from core.views import UserViewSet
+from core.views import UserCreateView
 
-router_user=SimpleRouter()
-router_user.register('user', UserViewSet)
+urlpatterns=[path('signup/', UserCreateView.as_view()),
+	     # path('login/', UserLoginView)
+		    ]

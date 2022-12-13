@@ -1,11 +1,11 @@
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.password_validation import validate_password
 from django.db import models
 from core.managers import UserManager, UserRoles
 
 
 class User(AbstractUser):
     role = models.CharField(max_length=5, choices=UserRoles.choices, default=UserRoles.USER)
+    email = models.EmailField(unique=False, blank=True)
 
     # переопределение стандартного поведения при сохранении пользоваетелей через createsuperuser
     objects = UserManager()
