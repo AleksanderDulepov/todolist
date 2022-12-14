@@ -1,6 +1,7 @@
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from django.core import exceptions
 
 from core.models import User
 
@@ -11,7 +12,7 @@ class ModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ['id','username', 'first_name','last_name','email','password','password_repeat']
 
     #переопределение методов для валидации и хеширования пароля при записи через  view
     def is_valid(self, raise_exception=False):
@@ -20,8 +21,10 @@ class ModelSerializer(serializers.ModelSerializer):
         if password != password_repeat:
             raise ValidationError({"password_repeat":["Passwords don't match"]})
         del self.initial_data['password_repeat']
-        validate_password(password)
-
+        try:
+            validate_password(password)
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError({"password": e.messages})
         return super().is_valid(raise_exception=raise_exception)
 
 
