@@ -1,6 +1,6 @@
 from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from core.models import User
 
@@ -18,9 +18,10 @@ class ModelSerializer(serializers.ModelSerializer):
         password = self.initial_data.get('password')
         password_repeat = self.initial_data.get('password_repeat')
         if password != password_repeat:
-            raise ValidationError("Passwords don't match")
+            raise ValidationError({"password_repeat":["Passwords don't match"]})
         del self.initial_data['password_repeat']
         validate_password(password)
+
         return super().is_valid(raise_exception=raise_exception)
 
 
