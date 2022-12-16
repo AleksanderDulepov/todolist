@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    # 'rest_framework.authentication',
     'core',
 
 ]
@@ -83,8 +84,8 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        # "HOST": 'postgres',
-        "HOST": 'localhost',
+        "HOST": 'postgres',
+        # "HOST": 'localhost',
         "NAME": os.environ.get("POSTGRES_DB"),
         "PORT": os.environ.get("DB_PORT"),
         "USER": os.environ.get("POSTGRES_USER"),
@@ -110,6 +111,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK={"DEFAULT_AUTHENTICATION_CLASSES":["core.authentication.AuthenticationWithoutCSRF"],}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -134,3 +137,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'core.User'
+
+# APPEND_SLASH=False
