@@ -1,16 +1,18 @@
 import json
 
+import django.core.exceptions
+import rest_framework.exceptions
+from django.core.exceptions import ValidationError, BadRequest
 from django.contrib.auth import authenticate, login, logout
-from django.forms import model_to_dict
-from django.http import HttpResponseRedirect, JsonResponse
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, csrf_protect
-from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView, get_object_or_404
+from django.contrib.auth.password_validation import validate_password
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from rest_framework import serializers
+from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404, \
+	UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
 from core.models import User
-from core.serializers import UserSignupSerializer, UserLoginSerializer, UserProfileSerializer
+from core.serializers import UserSignupSerializer, UserLoginSerializer, UserProfileSerializer, UserUpdatePassword
 
 
 class UserCreateView(CreateAPIView):
@@ -18,41 +20,29 @@ class UserCreateView(CreateAPIView):
 	serializer_class=UserSignupSerializer
 
 
-# class UserLoginView(CreateAPIView):
-# 	queryset=User.objects.all()
-# 	serializer_class=UserLoginSerializer
-#
-# 	@method_decorator(csrf_protect)
-# 	def post(self, request, *args, **kwargs):
-# 		username=request.data.get('username')
-# 		password=request.data.get('password')
-# 		#проверка переданных данных и получение обьекта пользователя
-# 		user = authenticate(request, username=username, password=password)
-# 		if user is not None:
-# 			#"запоминание" сессии пользователя в куки (не токен)
-# 			login(request, user)
-# 			return HttpResponseRedirect('/')
-# 		else:
-# 			raise PermissionError
+class UserLoginView(CreateAPIView):
+	queryset=User.objects.all()
+	serializer_class=UserLoginSerializer
 
-@csrf_exempt
-def UserLoginView(request):
-	if request.method == 'POST':
-		data_dict = json.loads(request.body)
-		username = data_dict.get('username')
-		password = data_dict.get('password')
+	def post(self, request, *args, **kwargs):
+		username=request.data.get('username')
+		password=request.data.get('password')
 
-		print(username, password)
-		# аутентификация
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+
+	#проверка переданных данных и получение обьекта пользователя
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
-			# "запоминание" сессии пользователя в куки (не токен)
+			#"запоминание" сессии пользователя в куки
 			login(request, user)
-			return JsonResponse({"username":username,"password":password},status=200)
-			# return HttpResponseRedirect('/core/signup')
+			return JsonResponse({"username":username,
+								 "first_name":user.first_name,
+								 "last_name":user.last_name,
+								 "email":user.email},
+								status=200)
 		else:
-			raise PermissionError
-
+			raise ValidationError("Wrong values")
 
 class UserProfileView(RetrieveUpdateDestroyAPIView):
 	queryset = User.objects.all()
@@ -66,28 +56,70 @@ class UserProfileView(RetrieveUpdateDestroyAPIView):
 		obj = get_object_or_404(queryset, id=self.request.user.id)
 		return obj
 
-	def put(self, request, *args, **kwargs):
-		return self.update(request, *args, **kwargs)
-
-	# def get(self, request, *args, **kwargs):
-	# 	# print(dict(request.session))
-	# 	# print(request.session.session_key)
-	#
-	# 	return super().get(request, *args, **kwargs)
-
-	def patch(self, request, *args, **kwargs):
-		return self.partial_update(request, *args, **kwargs)
-
-
-	# def patch(self, request, *args, **kwargs):
-	# 	instance = self.get_object()
-	# 	serializer = self.get_serializer(instance, data=request.data)
-	#
-	# 	if serializer.is_valid():
-	# 		serializer.save()
-	#
-	# 	return Response(serializer.data)
-
 	def delete(self, request, *args, **kwargs):
 		logout(request)
-		return HttpResponseRedirect('/')
+		return HttpResponse(status=204)
+
+
+class UserUpdatePasswordView(UpdateAPIView):
+	queryset=User.objects.all()
+	serializer_class=UserUpdatePassword
+	permission_classes=[IsAuthenticated]
+
+
+	# доступ к текущему пользователю через куки, а не через lookup
+	def get_object(self):
+		queryset = self.get_queryset()
+		obj = get_object_or_404(queryset, id=self.request.user.id)
+		return obj
+
+	def patch(self, request, *args, **kwargs):
+		user = self.get_object()
+		old_password = request.data.get('old_password')
+		new_password = request.data.get('new_password')
+
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+
+		# if not old_password:
+		# 	raise serializers.ValidationError({"old_password":"This field id required"})
+		# if not new_password:
+		# 	raise serializers.ValidationError({"new_password":"This field id required"})
+
+		if not user.check_password(old_password):
+			raise serializers.ValidationError({"old_password":"Wrong value"})
+
+		try:
+			validate_password(new_password)
+		except ValidationError as error:
+			raise serializers.ValidationError({"new_password": error.messages})
+
+		user.set_password(new_password)
+		user.save()
+
+		return JsonResponse({"old_password":old_password, "new_password":new_password},status=200)
+
+	# def patch(self, request, *args, **kwargs):
+	# 	user = self.get_object()
+	# 	old_password = request.data.get('old_password')
+	# 	new_password = request.data.get('new_password')
+	# 	if not old_password:
+	# 		raise serializers.ValidationError({"old_password":"This field id required"})
+	# 	if not new_password:
+	# 		raise serializers.ValidationError({"new_password":"This field id required"})
+	#
+	# 	if not user.check_password(old_password):
+	# 		raise serializers.ValidationError({"old_password":"Wrong value"})
+	#
+	# 	try:
+	# 		validate_password(new_password)
+	# 	except ValidationError as error:
+	# 		raise serializers.ValidationError({"new_password": error.messages})
+	#
+	# 	user.set_password(new_password)
+	# 	user.save()
+	#
+	# 	return JsonResponse({"old_password":old_password, "new_password":new_password},status=200)
+
+	def put(self, request, *args, **kwargs):
+		return self.patch(request, *args, **kwargs)

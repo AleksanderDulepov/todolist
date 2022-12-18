@@ -1,12 +1,9 @@
-from django.contrib.auth.password_validation import validate_password, MinimumLengthValidator, CommonPasswordValidator, \
-    get_password_validators
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
-from django.core import exceptions
+from rest_framework.validators import UniqueValidator
+from django.core.exceptions import ValidationError
 
 from core.models import User
-from todolist import settings
-from todolist.settings import AUTH_PASSWORD_VALIDATORS
 
 
 class UserSignupSerializer(serializers.ModelSerializer):
@@ -21,11 +18,11 @@ class UserSignupSerializer(serializers.ModelSerializer):
         password = self.initial_data.get('password')
         password_repeat = self.initial_data.get('password_repeat')
         if password != password_repeat:
-            raise ValidationError({"password_repeat": ["Passwords don't match"]})
+            raise serializers.ValidationError({"password_repeat": ["Passwords don't match"]})
         del self.initial_data['password_repeat']
         try:
             validate_password(password)
-        except exceptions.ValidationError as e:
+        except ValidationError as e:
             raise serializers.ValidationError({"password": e.messages})
         return super().is_valid(raise_exception=raise_exception)
 
@@ -37,16 +34,22 @@ class UserSignupSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
+    #переопределение только для проверки наличия
+    username = serializers.CharField(max_length=128)
+    password= serializers.CharField(max_length=128)
+
     class Meta:
         model = User
         fields = ['username', 'password']
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    # username=serializers.CharField(max_length=128,unique=True,required=True)
-    # first_name = serializers.CharField(max_length=128,required=True)
-    # last_name = serializers.CharField(max_length=128,required=True)
-    # email=serializers.EmailField(required=True)
+    username = serializers.CharField(max_length=128,
+                                     required=True,
+                                     validators=[UniqueValidator(queryset=User.objects.all())])
+    first_name = serializers.CharField(max_length=128, required=True)
+    last_name = serializers.CharField(max_length=128, required=True)
+    email = serializers.EmailField(required=True)
 
     # def update(self, instance, validated_data):
     #     instance.username = validated_data.get('username', instance.username)
@@ -59,3 +62,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'email']
+
+
+class UserUpdatePassword(serializers.ModelSerializer):
+
+    old_password = serializers.CharField(max_length=255)
+    new_password = serializers.CharField(max_length=255)
+
+    class Meta:
+        model = User
+        fields=["old_password", "new_password"]
+
+
