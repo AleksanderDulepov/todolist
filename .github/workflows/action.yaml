@@ -19,10 +19,8 @@ jobs:
       - name: render configs for testing
         run: |
           cat .env-ci | envsubst > .env
-      - name: docker run
-        run: docker compose up --build -d
       - name: run pytest
-        run: docker compose exec -it api /bin/sh | pytest
+        run: docker compose up --build -d | docker compose exec -it api /bin/sh | pytest
   build_and_push:
     needs: testing
     runs-on: ubuntu-latest
