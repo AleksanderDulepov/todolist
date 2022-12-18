@@ -50,13 +50,13 @@ services:
       retries: 3
   tests:
     build: .
-    command: python pytest
+    command: python -m pytest
     env_file:
       - ./.env
     depends_on:
       api:
         condition:
-          service_completed_successfully
+          service_started
 
 
 volumes:
