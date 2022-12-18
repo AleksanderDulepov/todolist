@@ -1,9 +1,6 @@
-import pytest
 
 from tests.factories import UserFactory
 from pytest_factoryboy import register
-
-from todolist import settings
 
 pytest_plugins="tests.fixtures"
 
