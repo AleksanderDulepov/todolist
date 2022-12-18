@@ -20,6 +20,8 @@ jobs:
       - name: go api container
         run: docker compose exec -it api /bin/sh
       - name: run pytest
+        run: python -V
+      - name: run pytest
         run: pip show pytest
   build_and_push:
     needs: testing
