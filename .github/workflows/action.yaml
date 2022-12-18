@@ -12,7 +12,7 @@ jobs:
           cat .env-ci | envsubst > .env
       - name: start docker compose
         run: docker compose up --build -d
-      - name: go into api container
+      - name: go api container
         run: docker compose exec -it api /bin/sh
       - name: run pytest
         run: pytest .
