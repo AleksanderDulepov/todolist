@@ -20,7 +20,7 @@ jobs:
         run: |
           cat .env-ci | envsubst > .env
       - name: docker run
-        run: docker compose up --build -d
+        run: docker compose build
       - name: run pytest
         run: pytest .
   build_and_push:
