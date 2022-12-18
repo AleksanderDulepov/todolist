@@ -20,7 +20,7 @@ jobs:
       - name: go api container
         run: docker compose exec -it api /bin/sh
       - name: run pytest
-        run: python -m pytest --import-mode=append tests/
+        run: py.test
   build_and_push:
     needs: testing
     runs-on: ubuntu-latest
