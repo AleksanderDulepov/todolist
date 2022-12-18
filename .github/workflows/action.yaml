@@ -10,6 +10,8 @@ jobs:
       - name: render configs for testing
         run: |
           cat .env-ci | envsubst > .env
+      - name: print
+        run: cat .env
       - name: start docker compose
         run: docker compose up --build -d
       - name: go api container
