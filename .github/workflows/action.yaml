@@ -23,8 +23,8 @@ jobs:
         run: docker compose up --build -d
       - name: go into api container
         run: docker compose exec -it api /bin/sh
-      - name: go into api container
-        run: ls
+      - name: run pytest
+        run: pytest .
   build_and_push:
     needs: testing
     runs-on: ubuntu-latest
