@@ -18,7 +18,9 @@ jobs:
       - name: start docker compose
         run: docker compose up --build -d
       - name: go api container
-        run: docker compose exec -it api /bin/sh | pytest
+        run: docker compose exec -it api /bin/sh
+      - name: run pytest
+        run: python -m pytest
   build_and_push:
     needs: testing
     runs-on: ubuntu-latest
