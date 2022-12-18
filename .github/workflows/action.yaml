@@ -4,18 +4,9 @@ on: [push]
 jobs:
   testing:
     runs-on: ubuntu-latest
-    env:
-      DB_USER: ${{ secrets.DB_USER }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      DB_NAME: ${{ secrets.DB_NAME }}
-      DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
     steps:
       - name: clone code
         uses: actions/checkout@v2
-      - name: install python
-        uses: actions/setup-python@v2
-      - name: install requirements
-        run: pip install -r requirements.txt
       - name: render configs for testing
         run: |
           cat .env-ci | envsubst > .env
