@@ -42,7 +42,7 @@ services:
       POSTGRES_PASSWORD: $DB_PASSWORD
     restart: always
     ports:
-      - "5432:5432"
+      - "${$DB_PORT}:5432"
     healthcheck:
       test: pg_isready -d ${DB_NAME} -U ${DB_USER}
       interval: 3s
