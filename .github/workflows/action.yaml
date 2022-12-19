@@ -53,6 +53,7 @@ jobs:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USER }}
           password: ${{ secrets.VM_PASSWORD }}
+          port: "22"
           source: "deploy/docker-compose.yaml,deploy/.env"
           target: "django-appp"
           strip_components: 1
