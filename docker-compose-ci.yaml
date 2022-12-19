@@ -40,6 +40,7 @@ services:
       POSTGRES_DB: $DB_NAME
       POSTGRES_USER: $DB_USER
       POSTGRES_PASSWORD: $DB_PASSWORD
+      DB_PORT: $DB_PORT
     restart: always
     ports:
       - "5432:5432"

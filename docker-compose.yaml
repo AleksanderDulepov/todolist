@@ -17,10 +17,7 @@ services:
     ports:
         - 8000:8000
     depends_on:
-      postgres:
-        condition:
-          service_healthy
-      migrations:
+      tests:
         condition:
           service_completed_successfully
   migrations:
@@ -54,9 +51,12 @@ services:
     env_file:
       - ./.env
     depends_on:
-      api:
+      postgres:
         condition:
-          service_started
+          service_healthy
+      migrations:
+        condition:
+          service_completed_successfully
 
 
 volumes:

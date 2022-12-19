@@ -1,4 +1,4 @@
-from factory import django
+from factory import django, PostGenerationMethodCall
 
 from core.models import User
 
@@ -8,8 +8,11 @@ class UserFactory(django.DjangoModelFactory):
 		model=User
 
 	username="test_username"
-	password="test_password0"
+	# password="test_password0"
 	first_name="test"
-	last_name="test",
+	last_name="test"
 	email="test@email.com"
 	is_superuser=True
+
+	password = PostGenerationMethodCall('set_password',
+												'test_password0')
