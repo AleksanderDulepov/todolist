@@ -13,11 +13,9 @@ class UserManager(BaseUserManager):
     определяем метод создания пользователя через manage.py createsuperuser
     """
 
-    def create_user(self, username, email, first_name=None, last_name=None, password=None, role=UserRoles.USER):
+    def create_user(self, username, email, password=None, role=UserRoles.USER):
         user = self.model(
             username=username,
-            first_name=first_name,
-            last_name=last_name,
             email=self.normalize_email(email),
             role=role
         )

@@ -13,8 +13,7 @@ def authorized_user(client, django_user_model):
     email = "test@email.com"
     role = "admin"
 
-    user = django_user_model.objects.create_user(username=username, password=password, email=email, role=role,
-                                                 first_name=first_name, last_name=last_name)
+    user = django_user_model.objects.create_user(username=username, password=password, email=email, role=role)
 
     response = client.post("/core/login",
                            {"username": username, "password": password},
