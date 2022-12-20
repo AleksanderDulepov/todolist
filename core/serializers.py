@@ -11,7 +11,7 @@ class UserSignupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password', 'password_repeat']
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'password', 'password_repeat')
 
     # переопределение методов для валидации и хеширования пароля при записи через  view
     def is_valid(self, raise_exception=False):
@@ -40,7 +40,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'password']
+        fields = ('username', 'password')
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -61,7 +61,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email']
+        fields = ('id', 'username', 'first_name', 'last_name', 'email')
 
 
 class UserUpdatePassword(serializers.ModelSerializer):
@@ -71,6 +71,6 @@ class UserUpdatePassword(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields=["old_password", "new_password"]
+        fields=("old_password", "new_password")
 
 

@@ -8,12 +8,12 @@ import pytest
 def authorized_user(client, django_user_model):
     username = "auth_test_username"
     password = "test_password0"
-    first_name="test"
-    last_name="test"
     email = "test@email.com"
-    role = "admin"
 
-    user = django_user_model.objects.create_user(username=username, password=password, email=email, role=role)
+    user = django_user_model.objects.create_user(username=username, password=password, email=email)
+    user.first_name="test"
+    user.last_name="test"
+    user.save()
 
     response = client.post("/core/login",
                            {"username": username, "password": password},

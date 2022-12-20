@@ -13,7 +13,7 @@ load_dotenv(dotenv_path)
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os.environ.get("DEBUG")=="True" else False
+DEBUG = True if os.environ.get("DEBUG") == "True" else False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -63,7 +63,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'todolist.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -71,8 +70,8 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "HOST": 'postgres',
-        # "HOST": 'localhost',
+        # "HOST": 'postgres',
+        "HOST": 'localhost',
         "NAME": os.environ.get("POSTGRES_DB"),
         "PORT": os.environ.get("DB_PORT"),
         "USER": os.environ.get("POSTGRES_USER"),
@@ -99,16 +98,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.vk.VKOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
 
-
-REST_FRAMEWORK={
-    "DEFAULT_AUTHENTICATION_CLASSES":["core.authentication.AuthenticationWithoutCSRF"],
-                }
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ["core.authentication.AuthenticationWithoutCSRF"],
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -121,18 +118,17 @@ USE_I18N = True
 
 USE_TZ = True
 
-SOCIAL_AUTH_URL_NAMESPACE='social'
-SOCIAL_AUTH_VK_OAUTH2_KEY=os.environ.get("SOCIAL_AUTH_VK_OAUTH2_KEY")
-SOCIAL_AUTH_VK_OAUTH2_SECRET=os.environ.get("SOCIAL_AUTH_VK_OAUTH2_SECRET")
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+SOCIAL_AUTH_VK_OAUTH2_KEY = os.environ.get("SOCIAL_AUTH_VK_OAUTH2_KEY")
+SOCIAL_AUTH_VK_OAUTH2_SECRET = os.environ.get("SOCIAL_AUTH_VK_OAUTH2_SECRET")
 
 STATIC_URL = 'static/'
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'core.User'
 
-SOCIAL_AUTH_JSONFIELD_ENABLED=True
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/logged-in/'
 SOCIAL_AUTH_LOGIN_ERROR_URL = '/login-error/'
 SOCIAL_AUTH_LOGIN_URL = '/login-error/'
