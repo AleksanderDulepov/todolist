@@ -44,20 +44,13 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(max_length=128,
-                                     required=True,
-                                     validators=[UniqueValidator(queryset=User.objects.all())])
-    first_name = serializers.CharField(max_length=128, required=True)
-    last_name = serializers.CharField(max_length=128, required=True)
-    email = serializers.EmailField(required=True)
+    # username = serializers.CharField(max_length=128,
+    #                                  required=True,
+    #                                  validators=[UniqueValidator(queryset=User.objects.all())])
+    # first_name = serializers.CharField(max_length=128, required=True)
+    # last_name = serializers.CharField(max_length=128, required=True)
+    # email = serializers.EmailField(required=True)
 
-    # def update(self, instance, validated_data):
-    #     instance.username = validated_data.get('username', instance.username)
-    #     instance.first_name = validated_data.get('first_name', instance.first_name)
-    #     instance.last_name = validated_data.get('last_name', instance.last_name)
-    #     instance.email = validated_data.get('email', instance.email)
-    #     instance.save()
-    #     return instance
 
     class Meta:
         model = User

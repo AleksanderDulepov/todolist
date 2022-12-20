@@ -56,6 +56,9 @@ class UserProfileView(RetrieveUpdateDestroyAPIView):
 		obj = get_object_or_404(queryset, id=self.request.user.id)
 		return obj
 
+	def put(self, request, *args, **kwargs):
+		return super().patch(request, *args, **kwargs)
+
 	def delete(self, request, *args, **kwargs):
 		logout(request)
 		return HttpResponse(status=204)
@@ -80,11 +83,6 @@ class UserUpdatePasswordView(UpdateAPIView):
 
 		serializer = self.get_serializer(data=request.data)
 		serializer.is_valid(raise_exception=True)
-
-		# if not old_password:
-		# 	raise serializers.ValidationError({"old_password":"This field id required"})
-		# if not new_password:
-		# 	raise serializers.ValidationError({"new_password":"This field id required"})
 
 		if not user.check_password(old_password):
 			raise serializers.ValidationError({"old_password":"Wrong value"})
