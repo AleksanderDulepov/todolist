@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'social_django',
     'core',
+    'goals',
+    'django_filters',
 
 ]
 
@@ -104,6 +106,7 @@ AUTHENTICATION_BACKENDS = (
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["core.authentication.AuthenticationWithoutCSRF"],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }
 
 # Internationalization
