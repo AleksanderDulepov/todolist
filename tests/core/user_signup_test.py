@@ -30,6 +30,7 @@ def test_user_signup(client):
 def test_user_signup_fail_password(client):
     data = {"username": "test",
             "password": "Zxcv0804@",
+            "password_repeat": "",
             "first_name": "test",
             "last_name": "test",
             "email": "test@email.com"}
