@@ -1,10 +1,11 @@
 import json
 
 import pytest
+from requests.cookies import morsel_to_cookie
 
 
 @pytest.mark.django_db
-def test_user_login(client, user):
+def test_user_login(client, user, authorized_user_cookie):
     data = {"username": user.username, "password": "test_password0"}
 
     expected_response = {
@@ -12,7 +13,7 @@ def test_user_login(client, user):
         "first_name": user.first_name,
         "last_name": user.last_name,
         "email": user.email,
-        "password":user.password
+        "password": user.password
     }
 
     response = client.post("/core/login",
@@ -22,4 +23,5 @@ def test_user_login(client, user):
 
     assert response.status_code == 200
     assert json.loads(response.content) == expected_response
-    assert "sessionid" in response.cookies
+    assert 'sessionid' in response.cookies
+    # assert morsel_to_cookie(response.cookies['sessionid']).value!=morsel_to_cookie(authorized_user_cookie).value

@@ -36,12 +36,13 @@ class GoalFactory(factory.django.DjangoModelFactory):
 	user = factory.SubFactory(UserFactory)
 	created = factory.Faker("date_time")
 	updated = factory.Faker("date_time")
+	due_date = factory.Faker("date_time")
 	title = "goal_title"
 	category = factory.SubFactory(GoalCategoryFactory)
 	description = "goal_description"
 	status = 1
 	priority = 1
-	due_date = factory.Faker("date_time")
+
 
 
 class GoalCommentFactory(factory.django.DjangoModelFactory):
