@@ -17,11 +17,12 @@ def test_user_login(client, user, authorized_user_cookie):
     }
 
     response = client.post("/core/login",
-                       data,
-                       content_type="application/json",
-                       )
+                           data,
+                           content_type="application/json",
+                           )
 
     assert response.status_code == 200
     assert json.loads(response.content) == expected_response
     assert 'sessionid' in response.cookies
-    # assert morsel_to_cookie(response.cookies['sessionid']).value!=morsel_to_cookie(authorized_user_cookie).value
+    # проверка самого значения sessionid
+    assert morsel_to_cookie(response.cookies['sessionid']).value == morsel_to_cookie(authorized_user_cookie).value

@@ -25,8 +25,7 @@ def test_goal_create(client, authorized_user_cookie, goal_category):
         "due_date": "2021-12-01T00:00:00Z"
     }
 
-    response = client.post("/goals/goal/create", data, content_type="application/json",
-                           cookies=authorized_user_cookie)
+    response = client.post("/goals/goal/create", data, content_type="application/json")
 
     assert response.status_code == 201
 
@@ -34,7 +33,6 @@ def test_goal_create(client, authorized_user_cookie, goal_category):
         del response.data["id"]
         del response.data["created"]
         del response.data["updated"]
-
     except Exception as e:
         raise AssertionError("Wrong response data structure")
 
@@ -45,7 +43,7 @@ def test_goal_create(client, authorized_user_cookie, goal_category):
 def test_goal_list(client, authorized_user_cookie, goal):
     expected_response = GoalSerializer(goal).data
 
-    response = client.get("/goals/goal/list", cookies=authorized_user_cookie)
+    response = client.get("/goals/goal/list")
 
     assert response.status_code == 200
     assert json.loads(response.content)[0] == json.loads(json.dumps((expected_response)))
@@ -55,7 +53,7 @@ def test_goal_list(client, authorized_user_cookie, goal):
 def test_goal_retrieve(client, authorized_user_cookie, goal):
     expected_response = GoalSerializer(goal).data
 
-    response = client.get(f"/goals/goal/{goal.id}", cookies=authorized_user_cookie)
+    response = client.get(f"/goals/goal/{goal.id}")
 
     assert response.status_code == 200
     assert response.data == expected_response
@@ -70,8 +68,7 @@ def test_goal_update(client, authorized_user_cookie, goal, goal_category):
     expected_response_title = data["title"]
     expected_response_category = data["category"]
 
-    response = client.put(f"/goals/goal/{goal.id}", data, content_type="application/json",
-                           cookies=authorized_user_cookie)
+    response = client.put(f"/goals/goal/{goal.id}", data, content_type="application/json")
 
     assert response.status_code == 200
     assert response.data.get("title") == expected_response_title
@@ -80,5 +77,5 @@ def test_goal_update(client, authorized_user_cookie, goal, goal_category):
 
 @pytest.mark.django_db
 def test_goal_delete(client, authorized_user_cookie, goal):
-    response = client.delete(f"/goals/goal/{goal.id}", cookies=authorized_user_cookie)
+    response = client.delete(f"/goals/goal/{goal.id}")
     assert response.status_code == 204

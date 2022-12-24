@@ -26,6 +26,7 @@ def test_user_signup(client):
     assert response.status_code == 201
     assert response.data == expected_response
 
+
 @pytest.mark.django_db
 def test_user_signup_fail_password(client):
     data = {"username": "test",

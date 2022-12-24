@@ -6,51 +6,50 @@ from goals.models import GoalCategory, Goal, GoalComment
 
 
 class UserFactory(factory.django.DjangoModelFactory):
-	class Meta:
-		model=User
+    class Meta:
+        model = User
 
-	username="test_username"
-	first_name="test_first_name"
-	last_name="test_last_name"
-	email="test@email.com"
-	is_superuser=True
+    username = "test_username"
+    first_name = "test_first_name"
+    last_name = "test_last_name"
+    email = "test@email.com"
+    is_superuser = True
 
-	password = PostGenerationMethodCall('set_password',
-												'test_password0')
+    password = PostGenerationMethodCall('set_password',
+                                        'test_password0')
 
 
 class GoalCategoryFactory(factory.django.DjangoModelFactory):
-	class Meta:
-		model = GoalCategory
+    class Meta:
+        model = GoalCategory
 
-	user = factory.SubFactory(UserFactory)
-	created = factory.Faker("date_time")
-	updated = factory.Faker("date_time")
-	title = "goal_category_title"
+    user = factory.SubFactory(UserFactory)
+    created = factory.Faker("date_time")
+    updated = factory.Faker("date_time")
+    title = "goal_category_title"
 
 
 class GoalFactory(factory.django.DjangoModelFactory):
-	class Meta:
-		model = Goal
+    class Meta:
+        model = Goal
 
-	user = factory.SubFactory(UserFactory)
-	created = factory.Faker("date_time")
-	updated = factory.Faker("date_time")
-	due_date = factory.Faker("date_time")
-	title = "goal_title"
-	category = factory.SubFactory(GoalCategoryFactory)
-	description = "goal_description"
-	status = 1
-	priority = 1
-
+    user = factory.SubFactory(UserFactory)
+    created = factory.Faker("date_time")
+    updated = factory.Faker("date_time")
+    due_date = factory.Faker("date_time")
+    title = "goal_title"
+    category = factory.SubFactory(GoalCategoryFactory)
+    description = "goal_description"
+    status = 1
+    priority = 1
 
 
 class GoalCommentFactory(factory.django.DjangoModelFactory):
-	class Meta:
-		model = GoalComment
+    class Meta:
+        model = GoalComment
 
-	user = factory.SubFactory(UserFactory)
-	created = factory.Faker("date_time")
-	updated = factory.Faker("date_time")
-	goal = factory.SubFactory(GoalFactory)
-	text = "goal_comment_text"
+    user = factory.SubFactory(UserFactory)
+    created = factory.Faker("date_time")
+    updated = factory.Faker("date_time")
+    goal = factory.SubFactory(GoalFactory)
+    text = "goal_comment_text"

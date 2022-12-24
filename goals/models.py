@@ -3,6 +3,7 @@ from django.utils import timezone
 
 from core.models import User
 
+
 class AdstractMixin(models.Model):
     class Meta:
         abstract = True
@@ -25,6 +26,7 @@ class GoalCategory(AdstractMixin):
 
     title = models.CharField(verbose_name="Название", max_length=255)
     is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
+
 
 class Goal(AdstractMixin):
     class Meta:
@@ -56,9 +58,9 @@ class Goal(AdstractMixin):
 
 
 class GoalComment(AdstractMixin):
-    goal= models.ForeignKey(Goal, on_delete=models.PROTECT)
-    text=models.CharField(max_length=500)
+    goal = models.ForeignKey(Goal, on_delete=models.PROTECT)
+    text = models.CharField(max_length=500)
 
     class Meta:
-        verbose_name="Комментарий"
-        verbose_name_plural="Комментарии"
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"

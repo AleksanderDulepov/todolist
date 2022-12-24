@@ -1,12 +1,11 @@
 from rest_framework import serializers
-from rest_framework.generics import get_object_or_404
 
 from core.serializers import UserProfileSerializer
 from goals.models import GoalCategory, Goal, GoalComment
 
 
 class GoalCategoryCreateSerializer(serializers.ModelSerializer):
-    #автопростановка текущего юзера self.request.user при создании обьекта
+    # автопростановка текущего юзера self.request.user при создании обьекта
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -24,7 +23,8 @@ class GoalCategorySerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ("id", "created", "updated", "user")
 
-#-----------------------
+
+# -----------------------
 class GoalCreateSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
@@ -52,7 +52,7 @@ class GoalSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "created", "updated", "user")
 
 
-#-----------------------
+# -----------------------
 
 class GoalCommentCreateSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -61,6 +61,7 @@ class GoalCommentCreateSerializer(serializers.ModelSerializer):
         model = GoalComment
         read_only_fields = ("id", "created", "updated", "user")
         fields = "__all__"
+
 
 class GoalCommentSerializer(serializers.ModelSerializer):
     # для вывода требуемых полей userа и без возможности перезаписи
