@@ -38,11 +38,14 @@ class BoardView(RetrieveUpdateDestroyAPIView):
 		# доступ к связанному обьекту через related_name модели BoardParticipant
 		return Board.objects.filter(participants__user=self.request.user, is_deleted=False)
 
+
 	# def patch(self, request, *args, **kwargs):
-	# 	serializer=self.get_serializer(Board.objects.get(pk=kwargs.get('pk')),data=request.data, partial=True)
+	# 	serializer=self.get_serializer(Board.objects.get(pk=kwargs.get('pk')), data=request.data, partial=True)
 	# 	if serializer.is_valid():
+	# 		serializer
 	# 		serializer.save
 	# 		return JsonResponse(status=201, data=serializer.data)
+
 
 	def perform_destroy(self, instance):
 		instance.is_deleted=True

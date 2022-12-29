@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from goals.filters import GoalDateFilter
 from goals.models import Goal
+from goals.permissions import GoalsBoardPermissions
 from goals.serializers import GoalCreateSerializer, GoalSerializer
 
 
@@ -32,12 +33,16 @@ class GoalListView(ListAPIView):
 
     # получение списка текущего авторизованного пользователя
     def get_queryset(self):
-        return Goal.objects.filter(user=self.request.user)
+        # return Goal.objects.filter(user=self.request.user)
+        return Goal.objects.select_related('category__board').filter(
+            category__board__participants__user=self.request.user)
+
 
 
 class GoalView(RetrieveUpdateDestroyAPIView):
     serializer_class = GoalSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes=[IsAuthenticated, GoalsBoardPermissions]
 
     def get_queryset(self):
-        return Goal.objects.filter(user=self.request.user)
+        # чтобы не возникала 404 когда передана чужая цель (будет 403 от пермишена)-иначе like GoalListView
+        return Goal.objects.all()

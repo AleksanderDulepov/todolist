@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from goals.filters import CommentFilter
 from goals.models import GoalComment
+from goals.permissions import GoalsBoardPermissions
 from goals.serializers import GoalCommentCreateSerializer, GoalCommentSerializer
 
 
@@ -15,7 +16,6 @@ class GoalCommentCreateView(CreateAPIView):
 
 
 class GoalCommentListView(ListAPIView):
-    queryset = GoalComment.objects.all()
     permission_classes = [IsAuthenticated]
     serializer_class = GoalCommentSerializer
     pagination_class = LimitOffsetPagination
@@ -27,8 +27,15 @@ class GoalCommentListView(ListAPIView):
     ordering = ["-created"]
     filterset_class = CommentFilter
 
+    def get_queryset(self):
+        return GoalComment.objects.select_related('goal__category__board').filter(
+            goal__category__board__participants__user=self.request.user)
+
 
 class GoalCommentView(RetrieveUpdateDestroyAPIView):
-    queryset = GoalComment.objects.all()
     serializer_class = GoalCommentSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes=[IsAuthenticated, GoalsBoardPermissions]
+
+    def get_queryset(self):
+        # чтобы не возникала 404 когда передана чужая цель (будет 403 от пермишена)-иначе like GoalCommentListView
+        return GoalComment.objects.all()

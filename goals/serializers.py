@@ -51,8 +51,13 @@ class GoalCreateSerializer(serializers.ModelSerializer):
         if value.is_deleted:
             raise serializers.ValidationError("not allowed in deleted category")
 
-        if value.user != self.context["request"].user:
-            raise serializers.ValidationError("not owner of category")
+        # if value.user != self.context["request"].user:
+        #     raise serializers.ValidationError("not owner of category")
+
+        if not BoardParticipant.objects.filter(
+                Q(role=BoardParticipant.Role.owner) | Q(role=BoardParticipant.Role.writer), board=value.board,
+                user=self.context['request'].user).exists():
+            raise serializers.ValidationError("not writer/owner this board")
 
         return value
 
@@ -80,6 +85,14 @@ class GoalCommentCreateSerializer(serializers.ModelSerializer):
         model = GoalComment
         read_only_fields = ("id", "created", "updated", "user")
         fields = "__all__"
+
+    def validate_goal(self, value):
+        if not BoardParticipant.objects.filter(
+                Q(role=BoardParticipant.Role.owner) | Q(role=BoardParticipant.Role.writer),
+                board=value.category.board, user=self.context['request'].user).exists():
+            raise serializers.ValidationError("not writer/owner this board")
+
+        return value
 
 
 class GoalCommentSerializer(serializers.ModelSerializer):
@@ -133,30 +146,80 @@ class BoardSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "created", "updated")
         fields = '__all__'
 
-    # если пондобится дозапись, а не перезапись-править метод
     def update(self, instance, validated_data):
-        print(validated_data)
-        owner = validated_data.pop('user')
+        owner = self.context['request'].user
         participants_new_arr = validated_data.pop('participants')
-        participants_new_dict = {
-            part['user'].id: part for part in participants_new_arr if part['user'].username != owner.username
-        }
-        participants_old_arr = instance.participants.exclude(user=owner).all()
+        participants_new_dict = {part['user'].id: part for part in participants_new_arr if
+                                 part['user'].username != owner.username}
+        participants_old_arr = instance.participants.exclude(user=owner)
+        participants_old_dict = {part.user.id: part for part in participants_old_arr}
+
+        new_dict_after_checking=[]
 
         with transaction.atomic():
-            for old_part in participants_old_arr:
-                if old_part.user.id not in participants_new_dict:
-                    old_part.delete()
-                else:
-                    if old_part.role != participants_new_dict[old_part.user.id]["role"]:
-                        old_part.role = participants_new_dict[old_part.user.id]["role"]
-                        old_part.save()
-                    del participants_new_dict[old_part.user.id]
+            if self.partial:
+                #patch
+                for new_part in participants_new_dict:
+                    if new_part in participants_old_dict.keys():
+                        new_role = participants_new_dict[new_part]['role']
+                        matched_user=participants_new_dict[new_part]['user']
+                        old_role = participants_old_dict[new_part].role
+                        if new_role != old_role:
+                            board_part = BoardParticipant.objects.get(board=instance, user=matched_user)
+                            board_part.role = new_role
+                            board_part.save()
+                    else:
+                        new_dict_after_checking.append(participants_new_dict[new_part])
 
-            for new_part in participants_new_dict.values():
-                BoardParticipant.objects.create(board=instance, user=new_part["user"], role=new_part["role"])
+                for new_part in new_dict_after_checking:
+                    BoardParticipant.objects.create(board=instance, user=new_part["user"], role=new_part["role"])
+
+            else:
+                #put
+                for old_part in participants_old_arr:
+                    if old_part.user.id not in participants_new_dict:
+                        old_part.delete()
+                    else:
+                        if old_part.role != participants_new_dict[old_part.user.id]["role"]:
+                            old_part.role = participants_new_dict[old_part.user.id]["role"]
+                            old_part.save()
+                        del participants_new_dict[old_part.user.id]
+
+                for new_part in participants_new_dict.values():
+                    BoardParticipant.objects.create(board=instance, user=new_part["user"], role=new_part["role"])
 
             instance.title = validated_data['title']
             instance.save()
 
         return instance
+
+
+    # def update(self, instance, validated_data):
+    #     owner = self.context['request'].user
+    #     participants_new_arr = validated_data.pop('participants')
+    #     participants_new_dict = {part['user'].id: part for part in participants_new_arr if
+    #                              part['user'].username != owner.username}
+    #     participants_old_arr = instance.participants.exclude(user=owner)
+    #     participants_old_dict = {part.user.id: part for part in participants_old_arr}
+    #
+    #     new_dict_after_checking=[]
+    #
+    #     for new_part in participants_new_dict:
+    #         if new_part in participants_old_dict.keys():
+    #             new_role = participants_new_dict[new_part]['role']
+    #             matched_user=participants_new_dict[new_part]['user']
+    #             old_role = participants_old_dict[new_part].role
+    #             if new_role != old_role:
+    #                 board_part = BoardParticipant.objects.get(board=instance, user=matched_user)
+    #                 board_part.role = new_role
+    #                 board_part.save()
+    #         else:
+    #             new_dict_after_checking.append(participants_new_dict[new_part])
+    #
+    #     for new_part in new_dict_after_checking:
+    #         BoardParticipant.objects.create(board=instance, user=new_part["user"], role=new_part["role"])
+    #
+    #     instance.title = validated_data['title']
+    #     instance.save()
+    #
+    #     return instance

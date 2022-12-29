@@ -15,19 +15,16 @@ class BoardPermissions(permissions.BasePermission):
 
 class GoalsBoardPermissions(BoardPermissions):
     def has_object_permission(self, request, view, obj):
-        global message
-        if obj.isinstance(GoalCategory):
+        if isinstance(obj,GoalCategory):
             obj = obj.board
-        if obj.isinstance(Goal):
+        if isinstance(obj,Goal):
             obj = obj.category.board
-        if obj.isinstance(GoalComment):
+        if isinstance(obj,GoalComment):
             obj = obj.goal.category.board
 
         if request.method in permissions.SAFE_METHODS:
-            message = "You don't have permission because board doesn't include you"
             return BoardParticipant.objects.filter(board=obj, user=request.user).exists()
         else:
-            message = "You don't have permission because your role is not owner/writer"
             return BoardParticipant.objects.filter(Q(role=BoardParticipant.Role.owner) |
                                                    Q(role=BoardParticipant.Role.writer),
                                                    board=obj,
