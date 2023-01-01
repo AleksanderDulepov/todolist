@@ -1,8 +1,9 @@
 import factory
 from factory import PostGenerationMethodCall
 
+import goals
 from core.models import User
-from goals.models import GoalCategory, Goal, GoalComment
+from goals.models import GoalCategory, Board
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -19,37 +20,23 @@ class UserFactory(factory.django.DjangoModelFactory):
                                         'test_password0')
 
 
-class GoalCategoryFactory(factory.django.DjangoModelFactory):
+class BoardFirstFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = GoalCategory
+        model = Board
 
-    user = factory.SubFactory(UserFactory)
-    created = factory.Faker("date_time")
-    updated = factory.Faker("date_time")
-    title = "goal_category_title"
+    title='board_title_1'
+    is_deleted=False
 
 
-class GoalFactory(factory.django.DjangoModelFactory):
+class UserSecondFactory(UserFactory):
     class Meta:
-        model = Goal
+        model = User
 
-    user = factory.SubFactory(UserFactory)
-    created = factory.Faker("date_time")
-    updated = factory.Faker("date_time")
-    due_date = factory.Faker("date_time")
-    title = "goal_title"
-    category = factory.SubFactory(GoalCategoryFactory)
-    description = "goal_description"
-    status = 1
-    priority = 1
+    username = "test_username_second"
+
+class BoardSecondFactory(BoardFirstFactory):
+    title = "title_board_2"
 
 
-class GoalCommentFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = GoalComment
 
-    user = factory.SubFactory(UserFactory)
-    created = factory.Faker("date_time")
-    updated = factory.Faker("date_time")
-    goal = factory.SubFactory(GoalFactory)
-    text = "goal_comment_text"
+
