@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   front:
-    image: sermalenk/skypro-front:lesson-37
+    image: sermalenk/skypro-front:lesson-38
     restart: always
     ports:
       - 80:80
@@ -32,6 +32,13 @@ services:
       postgres:
         condition:
           service_healthy
+  bot:
+    build: .
+    command: python manage.py runbot
+    env_file:
+      - ./.env
+    depends_on:
+      - api
   postgres:
     image: postgres:12.4-alpine
     volumes:
