@@ -39,10 +39,10 @@ class GoalCategoryListView(ListAPIView):
 
 class GoalCategoryView(RetrieveUpdateDestroyAPIView):
     serializer_class = GoalCategorySerializer
-    permission_classes=[IsAuthenticated, GoalsBoardPermissions]
+    permission_classes = [IsAuthenticated, GoalsBoardPermissions]
 
     def get_queryset(self):
-        #чтобы не возникала 404 когда передана чужая категория (будет 403 от пермишена) - иначе like GoalCategoryListView
+        # чтобы не возникала 404 когда передана чужая категория (будет 403 от пермишена) - иначе like GoalCategoryListView
         return GoalCategory.objects.all()
 
     # без удаления обьекта из базы-только проставление is_deleted = True

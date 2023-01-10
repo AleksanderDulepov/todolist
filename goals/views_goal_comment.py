@@ -34,7 +34,7 @@ class GoalCommentListView(ListAPIView):
 
 class GoalCommentView(RetrieveUpdateDestroyAPIView):
     serializer_class = GoalCommentSerializer
-    permission_classes=[IsAuthenticated, GoalsBoardPermissions]
+    permission_classes = [IsAuthenticated, GoalsBoardPermissions]
 
     def get_queryset(self):
         # чтобы не возникала 404 когда передана чужая цель (будет 403 от пермишена)-иначе like GoalCommentListView

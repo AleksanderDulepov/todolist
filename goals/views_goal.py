@@ -38,10 +38,9 @@ class GoalListView(ListAPIView):
             category__board__participants__user=self.request.user)
 
 
-
 class GoalView(RetrieveUpdateDestroyAPIView):
     serializer_class = GoalSerializer
-    permission_classes=[IsAuthenticated, GoalsBoardPermissions]
+    permission_classes = [IsAuthenticated, GoalsBoardPermissions]
 
     def get_queryset(self):
         # чтобы не возникала 404 когда передана чужая цель (будет 403 от пермишена)-иначе like GoalListView

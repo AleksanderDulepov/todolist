@@ -1,7 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from bot.models import TgUser
+from bot.models import TgUser, State
 from bot.tg.client import TgClient
 from todolist.settings import TG_TOKEN
 
@@ -18,7 +18,8 @@ class BotVerifySerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         owner = self.context['request'].user
         with transaction.atomic():
-            instance.fk_user_id=owner.id
+            instance.fk_user=owner
+            instance.state = State.authorized
             instance.save()
 
             tg_client = TgClient(TG_TOKEN)
