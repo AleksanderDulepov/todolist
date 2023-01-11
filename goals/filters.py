@@ -6,6 +6,7 @@ from goals.models import Goal, GoalComment, GoalCategory
 
 
 class GoalDateFilter(rest_framework.FilterSet):
+    """А сlass that extends FilterSet to manage filtering Goal objects"""
 
     class Meta:
         model = Goal
@@ -22,6 +23,8 @@ class GoalDateFilter(rest_framework.FilterSet):
 
 
 class CommentFilter(rest_framework.FilterSet):
+    """А сlass that extends FilterSet to manage filtering GoalComment objects"""
+
     goal = django_filters.CharFilter(field_name="goal__id", lookup_expr="exact")
 
     class Meta:
@@ -30,6 +33,8 @@ class CommentFilter(rest_framework.FilterSet):
 
 
 class BoardFilter(rest_framework.FilterSet):
+    """А сlass that extends FilterSet to manage filtering Board objects"""
+
     board = django_filters.CharFilter(field_name="board__id", lookup_expr="exact")
 
     class Meta:

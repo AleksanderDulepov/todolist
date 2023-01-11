@@ -6,6 +6,17 @@ import marshmallow as marshmallow
 
 @dataclass
 class GetUpdatesResponse:
+    """
+    А сlass that includes attributes from telegram bot api objects
+
+    Attributes
+    --------
+    ok: bool
+    	A variable that describes response status
+    result: List[Update]
+    	A sequence of Update objects that can be get from telegram bot request
+    """
+
     ok: bool
     result: List[Update]
 
@@ -15,6 +26,17 @@ class GetUpdatesResponse:
 
 @dataclass
 class SendMessageResponse:
+    """
+    А сlass that includes Message objects from telegram bot
+
+    Attributes
+    --------
+    ok: bool
+    	A variable that describes response status
+    result: List[Message]
+    	A sequence of Message objects that can be get from telegram bot request
+    """
+
     ok: bool
     result: Message
 

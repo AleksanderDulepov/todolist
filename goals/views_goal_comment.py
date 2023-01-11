@@ -11,11 +11,15 @@ from goals.serializers import GoalCommentCreateSerializer, GoalCommentSerializer
 
 
 class GoalCommentCreateView(CreateAPIView):
+    """А сlass that extends CreateAPIView to manage creating GoalComment object"""
+
     permission_classes = [IsAuthenticated]
     serializer_class = GoalCommentCreateSerializer
 
 
 class GoalCommentListView(ListAPIView):
+    """А сlass that extends ListAPIView to get list of GoalComment objects"""
+
     permission_classes = [IsAuthenticated]
     serializer_class = GoalCommentSerializer
     pagination_class = LimitOffsetPagination
@@ -33,6 +37,8 @@ class GoalCommentListView(ListAPIView):
 
 
 class GoalCommentView(RetrieveUpdateDestroyAPIView):
+    """А сlass that extends RetrieveUpdateDestroyAPIView to manage retrieve, update and destroy GoalComment object"""
+
     serializer_class = GoalCommentSerializer
     permission_classes = [IsAuthenticated, GoalsBoardPermissions]
 

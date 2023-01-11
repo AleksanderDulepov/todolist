@@ -12,11 +12,15 @@ from goals.serializers import GoalCategoryCreateSerializer, GoalCategorySerializ
 
 
 class GoalCategoryCreateView(CreateAPIView):
+    """А сlass that extends CreateAPIView to manage creating GoalCategory object"""
+
     permission_classes = [IsAuthenticated]
     serializer_class = GoalCategoryCreateSerializer
 
 
 class GoalCategoryListView(ListAPIView):
+    """А сlass that extends ListAPIView to get list of GoalCategory objects"""
+
     permission_classes = [IsAuthenticated]
     serializer_class = GoalCategorySerializer
     pagination_class = LimitOffsetPagination
@@ -38,6 +42,8 @@ class GoalCategoryListView(ListAPIView):
 
 
 class GoalCategoryView(RetrieveUpdateDestroyAPIView):
+    """А сlass that extends RetrieveUpdateDestroyAPIView to manage retrieve, update and destroy GoalCategory object"""
+
     serializer_class = GoalCategorySerializer
     permission_classes = [IsAuthenticated, GoalsBoardPermissions]
 

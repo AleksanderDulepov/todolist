@@ -10,12 +10,16 @@ from goals.serializers import BoardCreateSerializer, BoardListSerializer, BoardS
 
 
 class BoardCreateView(CreateAPIView):
+    """А сlass that extends CreateAPIView to manage creating Board object"""
+
     model = Board
     permission_classes = [IsAuthenticated]
     serializer_class = BoardCreateSerializer
 
 
 class BoardListView(ListAPIView):
+    """А сlass that extends ListAPIView to get list of Board objects"""
+
     permission_classes = [IsAuthenticated]
     serializer_class = BoardListSerializer
     pagination_class = LimitOffsetPagination
@@ -30,6 +34,8 @@ class BoardListView(ListAPIView):
 
 
 class BoardView(RetrieveUpdateDestroyAPIView):
+    """А сlass that extends RetrieveUpdateDestroyAPIView to manage retrieve, update and destroy Board object"""
+
     model = Board
     permission_classes = [IsAuthenticated, BoardPermissions]
     serializer_class = BoardSerializer

@@ -9,6 +9,8 @@ from goals.models import GoalCategory, Goal, GoalComment, Board, BoardParticipan
 
 
 class GoalCategoryCreateSerializer(serializers.ModelSerializer):
+    """А сlass that manages the serialization of GoalCategory object when creating"""
+
     # автопростановка текущего юзера self.request.user при создании обьекта
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     # получение обьекта доски через pk
@@ -34,6 +36,8 @@ class GoalCategoryCreateSerializer(serializers.ModelSerializer):
 
 
 class GoalCategorySerializer(serializers.ModelSerializer):
+    """А сlass that manages the serialization of GoalCategory objects in other cases"""
+
     # для вывода требуемых полей userа и без возможности перезаписи
     user = UserProfileSerializer(read_only=True)
 
@@ -45,6 +49,8 @@ class GoalCategorySerializer(serializers.ModelSerializer):
 
 # -----------------------
 class GoalCreateSerializer(serializers.ModelSerializer):
+    """А сlass that manages the serialization of Goal object when creating"""
+
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     def validate_category(self, value):
@@ -68,6 +74,8 @@ class GoalCreateSerializer(serializers.ModelSerializer):
 
 
 class GoalSerializer(serializers.ModelSerializer):
+    """А сlass that manages the serialization of Goal objects in other cases"""
+
     user = UserProfileSerializer(read_only=True)
 
     class Meta:
@@ -79,6 +87,8 @@ class GoalSerializer(serializers.ModelSerializer):
 # -----------------------
 
 class GoalCommentCreateSerializer(serializers.ModelSerializer):
+    """А сlass that manages the serialization of GoalComment object when creating"""
+
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -96,6 +106,8 @@ class GoalCommentCreateSerializer(serializers.ModelSerializer):
 
 
 class GoalCommentSerializer(serializers.ModelSerializer):
+    """А сlass that manages the serialization of GoalComment objects in other cases"""
+
     # для вывода требуемых полей userа и без возможности перезаписи
     user = UserProfileSerializer(read_only=True)
 
@@ -106,6 +118,8 @@ class GoalCommentSerializer(serializers.ModelSerializer):
 
 
 class BoardCreateSerializer(serializers.ModelSerializer):
+    """А сlass that manages the serialization of Board object when creating"""
+
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -121,12 +135,16 @@ class BoardCreateSerializer(serializers.ModelSerializer):
 
 
 class BoardListSerializer(serializers.ModelSerializer):
+    """А сlass that manages the serialization of Board objects when outputing list"""
+
     class Meta:
         model = Board
         fields = "__all__"
 
 
 class BoardParticipantSerializer(serializers.ModelSerializer):
+    """А сlass that manages the serialization of BoardParticipant objects"""
+
     role = serializers.ChoiceField(required=True, choices=BoardParticipant.Role.choices)
     user = serializers.SlugRelatedField(required=True, queryset=User.objects.all(), slug_field="username")
 
@@ -137,6 +155,8 @@ class BoardParticipantSerializer(serializers.ModelSerializer):
 
 
 class BoardSerializer(serializers.ModelSerializer):
+    """А сlass that manages the serialization of Board objects in other cases"""
+
     participants = BoardParticipantSerializer(many=True)
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     title = serializers.CharField(required=True)
@@ -154,15 +174,15 @@ class BoardSerializer(serializers.ModelSerializer):
         participants_old_arr = instance.participants.exclude(user=owner)
         participants_old_dict = {part.user.id: part for part in participants_old_arr}
 
-        new_dict_after_checking=[]
+        new_dict_after_checking = []
 
         with transaction.atomic():
             if self.partial:
-                #patch
+                # patch
                 for new_part in participants_new_dict:
                     if new_part in participants_old_dict.keys():
                         new_role = participants_new_dict[new_part]['role']
-                        matched_user=participants_new_dict[new_part]['user']
+                        matched_user = participants_new_dict[new_part]['user']
                         old_role = participants_old_dict[new_part].role
                         if new_role != old_role:
                             board_part = BoardParticipant.objects.get(board=instance, user=matched_user)
@@ -175,7 +195,7 @@ class BoardSerializer(serializers.ModelSerializer):
                     BoardParticipant.objects.create(board=instance, user=new_part["user"], role=new_part["role"])
 
             else:
-                #put
+                # put
                 for old_part in participants_old_arr:
                     if old_part.user.id not in participants_new_dict:
                         old_part.delete()
@@ -192,34 +212,3 @@ class BoardSerializer(serializers.ModelSerializer):
             instance.save()
 
         return instance
-
-
-    # def update(self, instance, validated_data):
-    #     owner = self.context['request'].user
-    #     participants_new_arr = validated_data.pop('participants')
-    #     participants_new_dict = {part['user'].id: part for part in participants_new_arr if
-    #                              part['user'].username != owner.username}
-    #     participants_old_arr = instance.participants.exclude(user=owner)
-    #     participants_old_dict = {part.user.id: part for part in participants_old_arr}
-    #
-    #     new_dict_after_checking=[]
-    #
-    #     for new_part in participants_new_dict:
-    #         if new_part in participants_old_dict.keys():
-    #             new_role = participants_new_dict[new_part]['role']
-    #             matched_user=participants_new_dict[new_part]['user']
-    #             old_role = participants_old_dict[new_part].role
-    #             if new_role != old_role:
-    #                 board_part = BoardParticipant.objects.get(board=instance, user=matched_user)
-    #                 board_part.role = new_role
-    #                 board_part.save()
-    #         else:
-    #             new_dict_after_checking.append(participants_new_dict[new_part])
-    #
-    #     for new_part in new_dict_after_checking:
-    #         BoardParticipant.objects.create(board=instance, user=new_part["user"], role=new_part["role"])
-    #
-    #     instance.title = validated_data['title']
-    #     instance.save()
-    #
-    #     return instance

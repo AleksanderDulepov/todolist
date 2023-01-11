@@ -1,10 +1,21 @@
 from django.db import models
 from django.utils import timezone
-
 from core.models import User
+from datetime import datetime
 
 
 class AdstractMixin(models.Model):
+    """
+    Аn abstract сlass that includes common attributes to be extended by many other models
+
+    Attributes
+    --------
+    created: datetime.datetime
+    	A variable that describes creating date and time
+    updated: datetime.datetime
+    	A variable that describes updating date and time
+    """
+
     class Meta:
         abstract = True
 
@@ -19,6 +30,17 @@ class AdstractMixin(models.Model):
 
 
 class Board(AdstractMixin):
+    """
+    А class that includes attributes describe Board model
+
+    Attributes
+    --------
+    title: str
+    	A variable that describes board's title
+    is_deleted: bool
+    	A variable that includes actual state of board
+    """
+
     title = models.CharField(verbose_name="Название", max_length=255)
     is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
 
@@ -28,6 +50,19 @@ class Board(AdstractMixin):
 
 
 class BoardParticipant(AdstractMixin):
+    """
+    А class that includes attributes describe BoardParticipant model
+
+    Attributes
+    --------
+    board: Board
+    	A foreign key that relates BoardParticipant and related Board object
+    user: User
+    	A foreign key that relates BoardParticipant and related User object
+    role: Role
+    	A variable that describes object's role
+    """
+
     class Meta:
         unique_together = ("board", "user")
         verbose_name = "Участник"
@@ -58,6 +93,21 @@ class BoardParticipant(AdstractMixin):
 
 
 class GoalCategory(AdstractMixin):
+    """
+    А class that includes attributes describe GoalCategory model
+
+    Attributes
+    --------
+    board: Board
+    	A foreign key that relates GoalCategory and related Board object
+    user: User
+    	A foreign key that relates GoalCategory and related User object
+    title: str
+    	A variable that describes category's title
+    is_deleted: bool
+    	A variable that includes actual state of category
+    """
+
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
@@ -69,6 +119,27 @@ class GoalCategory(AdstractMixin):
 
 
 class Goal(AdstractMixin):
+    """
+    А class that includes attributes describe Goal model
+
+    Attributes
+    --------
+    user: User
+    	A foreign key that relates Goal and related User object
+    category: GoalCategory
+    	A foreign key that relates Goal and related GoalCategory object
+    title: str
+    	A variable that describes goal's title
+    description: str
+    	A variable that describes goal's description
+    status:Status
+    	A variable that describes goal's status
+    priority:Priority
+    	A variable that describes goal's priority
+    due_date: datetime.datetime
+    	A variable that describes deadline to performing the task
+    """
+
     class Meta:
         verbose_name = "Цель"
         verbose_name = "Цель"
@@ -100,6 +171,19 @@ class Goal(AdstractMixin):
 
 
 class GoalComment(AdstractMixin):
+    """
+    А class that includes attributes describe GoalComment model
+
+    Attributes
+    --------
+    goal: Goal
+    	A foreign key that relates GoalComment and related Goal object
+    user: User
+    	A foreign key that relates GoalComment and related User object
+    text: str
+    	A variable that describes goal comment's text
+    """
+
     goal = models.ForeignKey(Goal, on_delete=models.PROTECT)
     text = models.CharField(max_length=500)
     user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.PROTECT)
