@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     'core',
     'goals',
     'django_filters',
-
 ]
 
 MIDDLEWARE = [
@@ -105,7 +104,11 @@ AUTHENTICATION_BACKENDS = (
 )
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ["core.authentication.AuthenticationWithoutCSRF"],
+    # для разработки (без CSRF проверки) "DEFAULT_AUTHENTICATION_CLASSES": [
+    # "core.authentication.AuthenticationWithoutCSRF"],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
     "DEFAULT_PAGINATION_CLASS": 'rest_framework.pagination.LimitOffsetPagination',
 }
 

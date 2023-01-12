@@ -11,11 +11,9 @@ class BotVerifySerializer(serializers.ModelSerializer):
 
     verification_code=serializers.CharField(max_length=15, required=True)
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    is_test=False
 
     class Meta:
         model = TgUser
-        # fields = "__all__"
         exclude = ["id"]
 
     def update(self, instance, validated_data):
@@ -25,12 +23,11 @@ class BotVerifySerializer(serializers.ModelSerializer):
             instance.state = State.authorized
             instance.save()
 
-            self.send_ok_verification(chat_id=instance.t_chat_id)
+            self.send_ok_verification(instance.t_chat_id)
 
             return instance
 
     def send_ok_verification(self, chat_id: str):
-        if not self.is_test:
-            tg_client = TgClient(TG_TOKEN)
-            tg_client.send_message(chat_id=chat_id, text="[verification has been completed]")
+        tg_client = TgClient(TG_TOKEN)
+        tg_client.send_message(chat_id=chat_id, text="[verification has been completed]")
 
