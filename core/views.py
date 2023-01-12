@@ -10,11 +10,15 @@ from core.serializers import UserSignupSerializer, UserLoginSerializer, UserProf
 
 
 class UserCreateView(CreateAPIView):
+    """A class that extends CreateAPIView to manage signup of user"""
+
     queryset = User.objects.all()
     serializer_class = UserSignupSerializer
 
 
 class UserLoginView(CreateAPIView):
+    """A class that extends CreateAPIView to manage login user"""
+
     queryset = User.objects.all()
     serializer_class = UserLoginSerializer
 
@@ -27,6 +31,8 @@ class UserLoginView(CreateAPIView):
 
 
 class UserProfileView(RetrieveUpdateDestroyAPIView):
+    """A class that extends RetrieveUpdateDestroyAPIView to manage retrieve, update and destroy User object"""
+
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
@@ -43,6 +49,8 @@ class UserProfileView(RetrieveUpdateDestroyAPIView):
 
 
 class UserUpdatePasswordView(UpdateAPIView):
+    """A class that extends UpdateAPIView to manage updating user's password"""
+
     queryset = User.objects.all()
     serializer_class = UserUpdatePasswordSerializer
     permission_classes = [IsAuthenticated]

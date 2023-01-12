@@ -2,6 +2,7 @@ import factory
 from factory import PostGenerationMethodCall
 
 import goals
+from bot.models import TgUser, State
 from core.models import User
 from goals.models import GoalCategory, Board
 
@@ -38,5 +39,14 @@ class BoardSecondFactory(BoardFirstFactory):
     title = "title_board_2"
 
 
+class TgUserFactory(factory.django.DjangoModelFactory):
 
+    class Meta:
+        model=TgUser
+
+    t_chat_id="1"
+    t_user_id="1"
+    fk_user=None
+    verification_code="1q2w3e4r5t6y7u8"
+    state=State.not_authorized
 

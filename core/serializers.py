@@ -9,6 +9,8 @@ from core.models import User
 
 
 class UserSignupSerializer(serializers.ModelSerializer):
+    """A class that manages the serialization of User object when performing signup"""
+
     password = serializers.CharField()
     password_repeat = serializers.CharField(required=False)
 
@@ -32,6 +34,8 @@ class UserSignupSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
+    """A class that manages the serialization of User object when performing login"""
+
     username = serializers.CharField()
     password = serializers.CharField()
 
@@ -49,12 +53,16 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    """A class that manages the serialization of User object"""
+
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email')
 
 
 class UserUpdatePasswordSerializer(serializers.Serializer):
+    """A class that manages the serialization of User object when performing password updating"""
+
     old_password = serializers.CharField(required=True, write_only=True)
     new_password = serializers.CharField(required=True, write_only=True)
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
