@@ -80,6 +80,7 @@ def test_goal_delete(client, authorized_user_cookie, goal_first):
     response = client.delete(f"/goals/goal/{goal_first.id}")
     assert response.status_code == 204
 
+
 # с контролем пермишеннов
 
 @pytest.mark.django_db
@@ -96,10 +97,12 @@ def test_goal_create_fail(client, authorized_user_cookie, goal_category_second):
     response = client.post("/goals/goal/create", data, content_type="application/json")
     assert response.status_code == 400
 
+
 @pytest.mark.django_db
 def test_goal_retrieve_fail(client, authorized_user_cookie, goal_second):
     response = client.get(f"/goals/goal/{goal_second.id}")
     assert response.status_code == 403
+
 
 @pytest.mark.django_db
 def test_goal_update_fail(client, authorized_user_cookie, goal_second, goal_category):
@@ -108,6 +111,7 @@ def test_goal_update_fail(client, authorized_user_cookie, goal_second, goal_cate
             }
     response = client.put(f"/goals/goal/{goal_second.id}", data, content_type="application/json")
     assert response.status_code == 403
+
 
 @pytest.mark.django_db
 def test_goal_delete_fail(client, authorized_user_cookie, goal_second):

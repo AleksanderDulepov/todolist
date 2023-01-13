@@ -30,20 +30,19 @@ class TgClient:
         """A method to get Update objects from telegram bot request"""
 
         try:
-            response=requests.get(self.get_url("getUpdates"), params={'offset':offset,'timeout':timeout})
+            response = requests.get(self.get_url("getUpdates"), params={'offset': offset, 'timeout': timeout})
             res_dict = json.loads(response.content)
             object = GetUpdatesResponse(ok=res_dict.get("ok"), result=[Update(**i) for i in res_dict.get("result")])
             return object
         except:
             raise NotImplementedError
 
-
     def send_message(self, chat_id: int, text: str) -> SendMessageResponse:
         """A method to send message to telegram bot"""
 
         try:
             response = requests.get(self.get_url("sendMessage"), params={'chat_id': chat_id, 'text': text})
-            res_dict=json.loads(response.content)
+            res_dict = json.loads(response.content)
             object = SendMessageResponse(ok=res_dict.get("ok"), result=Message(**res_dict.get("result")))
             return object
         except:

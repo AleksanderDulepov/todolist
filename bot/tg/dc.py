@@ -42,4 +42,3 @@ class SendMessageResponse:
 
     class Meta:
         unknown = marshmallow.EXCLUDE
-

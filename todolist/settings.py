@@ -6,13 +6,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_path = BASE_DIR / '.env'
 
 load_dotenv(dotenv_path)
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.environ.get("DEBUG") == "True" else False
 
 ALLOWED_HOSTS = ["*"]
@@ -103,15 +99,12 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+#кастомная аутентификация через сессии, но без проверки CSRF токена (для девелопмента)
+AUTHENTICATION_CLASS = os.environ.get("AUTHENTICATION_CLASS")
 REST_FRAMEWORK = {
-    # для разработки (без CSRF проверки) "DEFAULT_AUTHENTICATION_CLASSES": [
-    # "core.authentication.AuthenticationWithoutCSRF"],
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        'rest_framework.authentication.SessionAuthentication',
-    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [AUTHENTICATION_CLASS or 'rest_framework.authentication.SessionAuthentication'],
     "DEFAULT_PAGINATION_CLASS": 'rest_framework.pagination.LimitOffsetPagination',
 }
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -124,7 +117,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-TG_TOKEN=os.environ.get("TG_TOKEN")
+TG_TOKEN = os.environ.get("TG_TOKEN")
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_VK_OAUTH2_KEY = os.environ.get("SOCIAL_AUTH_VK_OAUTH2_KEY")

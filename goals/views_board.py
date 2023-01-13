@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from rest_framework import filters
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import LimitOffsetPagination
@@ -40,9 +39,7 @@ class BoardView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, BoardPermissions]
     serializer_class = BoardSerializer
 
-    # все доски, где юзер является участником
     def get_queryset(self):
-        # доступ к связанному обьекту через related_name модели BoardParticipant
         return Board.objects.filter(participants__user=self.request.user, is_deleted=False)
 
     def perform_destroy(self, instance):
@@ -50,6 +47,5 @@ class BoardView(RetrieveUpdateDestroyAPIView):
         instance.save()
         instance.categories.update(is_deleted=True)
         Goal.objects.filter(category__board=instance).update(status=Goal.Status.archived)
-        # добавить удаление обьектов BoardParticipant после удаление доски
 
         return instance

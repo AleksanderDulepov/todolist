@@ -25,8 +25,8 @@ class BoardFirstFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Board
 
-    title='board_title_1'
-    is_deleted=False
+    title = 'board_title_1'
+    is_deleted = False
 
 
 class UserSecondFactory(UserFactory):
@@ -35,18 +35,17 @@ class UserSecondFactory(UserFactory):
 
     username = "test_username_second"
 
+
 class BoardSecondFactory(BoardFirstFactory):
     title = "title_board_2"
 
 
 class TgUserFactory(factory.django.DjangoModelFactory):
-
     class Meta:
-        model=TgUser
+        model = TgUser
 
-    t_chat_id="1"
-    t_user_id="1"
-    fk_user=None
-    verification_code="1q2w3e4r5t6y7u8"
-    state=State.not_authorized
-
+    t_chat_id = "1"
+    t_user_id = "1"
+    fk_user = None
+    verification_code = "1q2w3e4r5t6y7u8"
+    state = State.not_authorized

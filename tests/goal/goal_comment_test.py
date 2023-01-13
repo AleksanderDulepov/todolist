@@ -64,6 +64,7 @@ def test_goal_comment_delete(client, authorized_user_cookie, goal_comment_first)
     response = client.delete(f"/goals/goal_comment/{goal_comment_first.id}")
     assert response.status_code == 204
 
+
 # с контролем пермишеннов
 
 @pytest.mark.django_db
@@ -75,16 +76,19 @@ def test_goal_comment_create_fail(client, authorized_user_cookie, goal_second):
     response = client.post("/goals/goal_comment/create", data, content_type="application/json")
     assert response.status_code == 400
 
+
 @pytest.mark.django_db
 def test_goal_comment_retrieve_fail(client, authorized_user_cookie, goal_comment_second):
     response = client.get(f"/goals/goal_comment/{goal_comment_second.id}")
     assert response.status_code == 403
+
 
 @pytest.mark.django_db
 def test_goal_comment_update_fail(client, authorized_user_cookie, goal_comment_second):
     data = {"text": "updated_text"}
     response = client.put(f"/goals/goal_comment/{goal_comment_second.id}", data, content_type="application/json")
     assert response.status_code == 403
+
 
 @pytest.mark.django_db
 def test_goal_comment_delete_fail(client, authorized_user_cookie, goal_comment_second):

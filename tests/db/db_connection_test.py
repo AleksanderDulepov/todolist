@@ -25,7 +25,6 @@ def test_db_connection():
 
     assert db
 
-
     # cursor = connection.cursor()
     # query='''pg_isready -d todolist -U todolist'''
     # cursor.execute(query)
@@ -33,8 +32,7 @@ def test_db_connection():
     # print(row_data)
 
 
-
 @pytest.mark.django_db
 def test_db_connection_one_more():
     is_connection_ok = connection.ensure_connection()
-    assert is_connection_ok==None
+    assert is_connection_ok == None

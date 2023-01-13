@@ -57,9 +57,6 @@ class GoalCreateSerializer(serializers.ModelSerializer):
         if value.is_deleted:
             raise serializers.ValidationError("not allowed in deleted category")
 
-        # if value.user != self.context["request"].user:
-        #     raise serializers.ValidationError("not owner of category")
-
         if not BoardParticipant.objects.filter(
                 Q(role=BoardParticipant.Role.owner) | Q(role=BoardParticipant.Role.writer), board=value.board,
                 user=self.context['request'].user).exists():
@@ -108,7 +105,6 @@ class GoalCommentCreateSerializer(serializers.ModelSerializer):
 class GoalCommentSerializer(serializers.ModelSerializer):
     """А сlass that manages the serialization of GoalComment objects in other cases"""
 
-    # для вывода требуемых полей userа и без возможности перезаписи
     user = UserProfileSerializer(read_only=True)
 
     class Meta:

@@ -14,7 +14,7 @@ class GoalDateFilter(rest_framework.FilterSet):
             "due_date": ("lte", "gte"),
             "category": ("exact", "in"),
             "status": ("exact", "in"),
-            "priority": ("exact", "in"), #первое по умолчанию: ?priority=1, второе при передаче lookup: ?priority__in
+            "priority": ("exact", "in"),  # первое по умолчанию: ?priority=1, второе при передаче lookup: ?priority__in
         }
 
     filter_overrides = {
@@ -40,4 +40,3 @@ class BoardFilter(rest_framework.FilterSet):
     class Meta:
         model = GoalCategory
         fields = ["board"]
-
