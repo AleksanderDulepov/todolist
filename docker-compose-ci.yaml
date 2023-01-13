@@ -33,7 +33,7 @@ services:
         condition:
           service_healthy
   bot:
-    build: .
+    image: aleksanderdulepov/django_todolist_repo:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     command: python manage.py runbot
     env_file:
       - ./.env
