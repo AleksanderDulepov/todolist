@@ -22,6 +22,8 @@ class Command(BaseCommand):
                 chat_id = message_obj.chat.id
                 text = message_obj.text
 
+
+
                 try:
                     obj = get_object_or_404(TgUser, t_user_id=message_obj.from_id)
                 except:
